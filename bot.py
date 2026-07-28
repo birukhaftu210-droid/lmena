@@ -1,7 +1,8 @@
-from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+import asyncio
 import threading
 from flask import Flask
+from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
 # 1. ለRender መኝታ መከላከያ የሚሆን አነስተኛ የዌብ ሰርቨር (Flask)
 flask_app = Flask(__name__)
@@ -12,7 +13,10 @@ def home():
 
 def run_flask():
     # Render በሚሰጠን ፖርት (Port) ላይ ሰርቨሩን ያስነሳል
-    flask_app.run(host='0.0.0.0', port=10000)
+    # Render አውቶማቲክ PORT ስለሚሰጥ ከታች ያለውን ኮድ መጠቀም ይመረጣል
+    import os
+    port = int(os.environ.get("PORT", 10000))
+    flask_app.run(host='0.0.0.0', port=port)
 
 # ፎቶ ID
 HELP_PHOTO_FILE_ID = "AgACAgQAAxkBAANKame5OVlplhFhrxOas4F_fB9yoMAAAroSaxuhTDhTP1aL7KydZNcBAAMCAAN5AAM9BA"
@@ -25,7 +29,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     await update.message.reply_text(
-        text="👋 ሰላም! እንኳን ደህና መጡ።\nከታች ያሉትን የኪቦርድ ቁልፎች በመጫን የሚፈልጉትን ማግኘት ይችላሉ፡",
+        text="👋 ሰላም! እንኳን ደህና መጡ。\nከታች ያሉትን የኪቦርድ ቁልፎች በመጫን የሚፈልጉትን ማግኘት ይችላሉ፡",
         reply_markup=reply_markup
     )
 
@@ -43,23 +47,20 @@ async def reply_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     if user_text == "🍞 ዳቦ ሻጭ":
         await update.message.reply_text("🛒 ቀጥታ ዳቦ ሻጩን ለማግኘት @Dara10245901888 ያነጋግሩ፤ ያሉበት እናደርሳለን።")
     elif user_text == "🍌 ሙዝ ሻጭ":
-        await update.message.reply_text("🏢 የሙዝ አቅራቢ ለማግኘት @Fadder_7 ያነጋግሩ።")
+        await update.message.reply_text("🏢 የሙዝ አቅራቢ ለማግኘት @Fadder_7 ያነጋግሩ。")
     elif user_text == "🆘 የእርዳታ ጥሪ":
         try:
             await context.bot.send_photo(
                 chat_id=update.effective_chat.id,
                 photo=HELP_PHOTO_FILE_ID,
-                caption="📖 ይህ የእርዳታ ጥሪ ነው። ፎቶው ላይ የምታዩት ወንድማችን መናገር አይችልም፤ ማንነታቸው ባልታወቁ ሰዎች ተደፍሮ የተጣለ ሰው ነው እባካችሁ እርዱት። ቀጥታ እሱን ለማግኘት @Fadder_7 ያነጋግሩ።"
+                caption="📖 ይህ የእርዳታ ጥሪ ነው። ፎቶው ላይ የምታዩት ወንድማችን መናገር አይችልም፤ ማንነታቸው ባልታወቁ ሰዎች ተደፍሮ የተጣለ ሰው ነው እባካችሁ እርዱት። ቀጥታ እሱን ለማግኘት @Fadder_7 ያነጋግሩ。"
             )
         except Exception as e:
             await update.message.reply_text("❌ ፎቶውን መላክ አልተቻለም።")
     elif user_text:
         await update.message.reply_text("🤔 ምን ፈለጉ? ወጥ ይጨመር?")
 
-def main():
-    # 🚀 የዌብ ሰርቨሩን በስተጀርባ በተናጠል ማስጀመር
-    threading.Thread(target=run_flask, daemon=True).start()
-
+async def main_async():
     # የቴሌግራም ቦቱን ማስጀመር
     TOKEN = "8727117294:AAHrTR1TW-rKS81RIKpKvnHRJJAYJ7rTFh8"
     app = Application.builder().token(TOKEN).build()
@@ -68,7 +69,22 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT | filters.CONTACT | filters.PHOTO & ~filters.COMMAND, reply_message))
 
     print("ቦቱ እና የዌብ ሰርቨሩ እየሰሩ ነው...")
-    app.run_polling()
+    
+    # በ Render ላይ ስህተት እንዳይፈጠር ቦቱን በአግባቡ ማስነሳት
+    await app.initialize()
+    await app.updater.start_polling()
+    await app.start()
+    
+    # ቦቱ ሳይጠፋ በቋሚነት እንዲቆም ማድረግ
+    while True:
+        await asyncio.sleep(3600)
 
 if __name__ == '__main__':
-    main()
+    # 🚀 የዌብ ሰርቨሩን በስተጀርባ በተናጠል ማስጀመር
+    threading.Thread(target=run_flask, daemon=True).start()
+
+    # 🔄 አዲስ የ asyncio event loop መፍጠር እና ማሰናዳት (ዋናው መፍትሔ)
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(main_async())
+
