@@ -25,7 +25,7 @@ HELP_PHOTO_FILE_ID = "AgACAgQAAxkBAANKame5OVlplhFhrxOas4F_fB9yoMAAAroSaxuhTDhTP1
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     keyboard = [
         [KeyboardButton("🍞 ዳቦ ሻጭ"), KeyboardButton("🍌 ሙዝ ሻጭ")],
-        [KeyboardButton("📞 ስልክ ቁጥር ለመላክ", request_contact=True), KeyboardButton("🆘 የእርዳታ ጥሪ")]
+        [KeyboardButton("🆘 የእርዳታ ጥሪ")]
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     await update.message.reply_text(
