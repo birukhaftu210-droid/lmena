@@ -56,7 +56,7 @@ async def reply_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             media_group = [
                 InputMediaPhoto(
                     media=PHOTO_1_ID, 
-                    caption="📖 ይህ የእርዳታ ጥሪ ነው። ፎቶው ላይ የምታዩት ወንድማችን መናገር አይችልም፤ ማንነታቸው ባልታወቁ ሰዎች ተደፍሮ የተጣለ ሰው ነው እባካችሁ እርዱት የ ግራ መቀመጫው ከ አገልግሎት ውጪ ነው መጸዳዳት አይችልም በምትችሉት እርዱት። ቀጥታ እሱን ለማግኘት @Fadder_7 ያነጋግሩ。"
+                    caption="📖 ይህ የእርዳታ ጥሪ ነው። ፎቶው ላይ የምታዩት ወንድማችን መናገር አይችልም፤ ማንነታቸው ባልታወቁ ሰዎች ተደፍሮ የተጣለ ሰው ነው እባካችሁ እርዱት የ ግራ መቀመጫው ከ አገልግሎት ውጪ ነው መጸዳዳት አይችልም በምትችሉት እርዱት አሁን ላይ ዳይፐር መግዛት አቅቶት እላዩ ላይ እየተጸዳዳ ይግኛል😭።እባካችሁ ከመሞቱ በፊት ድረሱለት"
                 ),
                 InputMediaPhoto(media=PHOTO_2_ID),
                 InputMediaPhoto(media=PHOTO_3_ID)
@@ -81,7 +81,7 @@ async def reply_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
     # 3. ቀጥታ አድራሻ ቁልፍ
     elif user_text == "💬 ቀጥታ አድራሻ":
-        await update.message.reply_text("👤 ቀጥታ አደራጅውን ለማግኘት እና መረጃ ለመለዋወጥ 0908789012 ያነጋግሩ።")
+        await update.message.reply_text("👤 ቀጥታ አደራሻውን ለማግኘት እና መረጃ ለመለዋወጥ 0908789012 ያነጋግሩ።")
             
     elif user_text:
         await update.message.reply_text("🤔 እባክዎ ከታች ካሉት የኪቦርድ ቁልፎች አንዱን በመጫን የሚፈልጉትን መረጃ ያግኙ።")
