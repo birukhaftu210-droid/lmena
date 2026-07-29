@@ -71,10 +71,10 @@ async def reply_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             "🏦 **የገንዘብ እርዳታ ለማድረግ የባንክ አካውንቶች፦**\n\n"
             "📌 **የኢትዮጵያ ንግድ ባንክ (CBE)**\n"
             "🔹 የሂሳብ ቁጥር፦ `100012334566`\n"
-            "🔹 ስም፦ አስቻለ መገርሳ\n\n"
+            "🔹 ስም፦ አብዲ\n\n"
             "📌 **አቢሲኒያ ባንክ (BoA)**\n"
             "🔹 የሂሳብ ቁጥር፦ `1002933443`\n"
-            "🔹 ስም፦ አስቻለ መገርሳ\n\n"
+            "🔹 ስም፦ አብዲ\n\n"
             "🙏 ለምታደርጉት ትብብር ከልብ እናመሰግናለን!"
         )
         await update.message.reply_text(bank_info, parse_mode="Markdown")
